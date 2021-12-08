@@ -1,0 +1,73 @@
+
+Gurobi 9.0.2 (win64) logging started Wed Dec  8 11:21:13 2021
+
+Changed value of parameter LogFile to sub_mod_test_iter_1.txt
+   Prev:   Default: 
+Gurobi Optimizer version 9.0.2 build v9.0.2rc0 (win64)
+Optimize a model with 3283 rows, 6890 columns and 11725 nonzeros
+Model fingerprint: 0x18d32b55
+Coefficient statistics:
+  Matrix range     [9e-01, 5e+04]
+  Objective range  [5e-03, 6e+04]
+  Bounds range     [0e+00, 0e+00]
+  RHS range        [1e-02, 4e+01]
+Presolve removed 2818 rows and 5282 columns
+Presolve time: 0.01s
+Presolved: 465 rows, 1608 columns, 3085 nonzeros
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0      handle free variables                          0s
+     357    1.8171199e+05   0.000000e+00   0.000000e+00      0s
+
+Solved in 357 iterations and 0.01 seconds
+Optimal objective  1.817119901e+05
+Gurobi Optimizer version 9.0.2 build v9.0.2rc0 (win64)
+Optimize a model with 3283 rows, 6890 columns and 11725 nonzeros
+Coefficient statistics:
+  Matrix range     [9e-01, 5e+04]
+  Objective range  [5e-03, 6e+04]
+  Bounds range     [0e+00, 0e+00]
+  RHS range        [1e-02, 4e+01]
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    3.4720468e+36   4.301163e+35   3.472047e+06      0s
+     414    1.8166168e+05   0.000000e+00   0.000000e+00      0s
+
+Solved in 414 iterations and 0.01 seconds
+Optimal objective  1.816616766e+05
+Gurobi Optimizer version 9.0.2 build v9.0.2rc0 (win64)
+Optimize a model with 3283 rows, 6890 columns and 11725 nonzeros
+Coefficient statistics:
+  Matrix range     [9e-01, 5e+04]
+  Objective range  [5e-03, 6e+04]
+  Bounds range     [0e+00, 0e+00]
+  RHS range        [1e-02, 4e+01]
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    1.8166168e+05   0.000000e+00   0.000000e+00      0s
+
+Solved in 0 iterations and 0.00 seconds
+Optimal objective  1.816616766e+05
+Gurobi Optimizer version 9.0.2 build v9.0.2rc0 (win64)
+Optimize a model with 3283 rows, 6890 columns and 11725 nonzeros
+Coefficient statistics:
+  Matrix range     [9e-01, 5e+04]
+  Objective range  [5e-03, 6e+04]
+  Bounds range     [0e+00, 0e+00]
+  RHS range        [1e-02, 4e+01]
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    2.0376525e+35   1.952851e+34   2.037652e+05      0s
+      60    1.8166169e+05   0.000000e+00   0.000000e+00      0s
+
+Solved in 60 iterations and 0.01 seconds
+Optimal objective  1.816616938e+05
+Gurobi Optimizer version 9.0.2 build v9.0.2rc0 (win64)
+Optimize a model with 3283 rows, 6890 columns and 11725 nonzeros
+Coefficient statistics:
+  Matrix range     [9e-01, 5e+04]
+  Objective range  [5e-03, 6e+04]
+  Bounds range     [0e+00, 0e+00]
+  RHS range        [1e-02, 4e+01]
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    1.8166169e+05   0.000000e+00   0.000000e+00      0s
+
+Solved in 0 iterations and 0.00 seconds
+Optimal objective  1.816616938e+05

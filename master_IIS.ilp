@@ -1,0 +1,32 @@
+\ Model _copy
+\ LP format - for model browsing. Use MPS format to capture full model detail.
+Minimize
+ 
+Subject To
+ R158: 8485.062754109951 expansion_status[353,845]
+   - 22.9783398126507 corr_flow[353,845] - bus_angle[353] + bus_angle[845]
+   <= 8485.062754109951
+ R159: 8485.062754109951 expansion_status[353,891]
+   - 22.9783398126507 corr_flow[353,891] - bus_angle[353] + bus_angle[891]
+   <= 8485.062754109951
+ R2173: 768055.5056358088 expansion_status[353,845] + corr_flow[353,845]
+   >= 0
+ R2174: 768055.5056358088 expansion_status[353,891] + corr_flow[353,891]
+   >= 0
+ R4824: - corr_flow[353,825] - corr_flow[353,845] - corr_flow[353,891]
+   + gen[353] + load_shed[353] = 3
+ R5296: corr_flow[353,825] + gen[825] + load_shed[825] = 7
+Bounds
+ corr_flow[353,825] free
+ corr_flow[353,845] free
+ corr_flow[353,891] free
+ -infinity <= gen[353] <= 0
+ -infinity <= gen[825] <= 0
+ -infinity <= bus_angle[353] <= 30
+ bus_angle[845] >= -30
+ bus_angle[891] >= -30
+ -infinity <= load_shed[353] <= 0
+ -infinity <= load_shed[825] <= 0
+Binaries
+ expansion_status[353,845] expansion_status[353,891]
+End

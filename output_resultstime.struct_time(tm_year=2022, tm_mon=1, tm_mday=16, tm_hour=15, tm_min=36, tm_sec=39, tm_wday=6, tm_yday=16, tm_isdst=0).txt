@@ -1,0 +1,16 @@
+shed (MW)	0.0
+shed cost	40.0
+investment	(0, 0, 0, 0, 0.0)
+investment	(0, 0, 0, 0, 3655.56627935943)
+investment	(0, 0, 0, 0, 3655.56627935943)
+investment	(0, 0, 0, 0, 3655.56627935943)
+investment	(0, 0, 0, 0, 3655.56627935943)
+investment	(0, 0, 0, 0, 3655.56627935943)
+investment	(0, 0, 0, 0, 3655.56627935943)
+investment	(0, 0, 0, 0, 3655.56627935943)
+reconductor_status[1,2]	0.0
+reconductor_status[1,4]	0.0
+reconductor_status[1,5]	0.0
+reconductor_status[2,3]	0.0
+reconductor_status[3,4]	0.0
+reconductor_status[4,5]	0.0

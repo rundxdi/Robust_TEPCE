@@ -432,11 +432,11 @@ filenames = ["pglib-opf-master/az_2021_case892.m"]
 #filenames = ["pglib-opf-master/pglib_opf_case793_goc_tep.m"]
 
 #LP_Length = 3015
-cap = .7
-demand = .1
-gen = 3
+cap = 1
+demand = 1
+gen = 1
 #check scale here
-gen_cost = .000001
+gen_cost = .0000001
 
 for filename in filenames:
     
@@ -628,7 +628,7 @@ for filename in filenames:
 
         #Add operating constraints to master problem
         
-        #i.e. (7) - (17) from writeup?
+
         
         master_mod.addConstrs((-1/edge_b[i,j] * master_mod._corr_flow[i,j] - (master_mod._bus_angle[i] - master_mod._bus_angle[j]) <=
                     M*(1 - master_mod._expansion[i,j]) for (i,j) in expand_lines))
@@ -643,7 +643,7 @@ for filename in filenames:
     
         master_mod.addConstrs(gp.quicksum([master_mod._corr_flow[j,i] for j in graph.neighbors(i) if j < i]) - 
                            gp.quicksum([master_mod._corr_flow[i,j] for j in graph.neighbors(i) if j > i]) + 
-                           (master_mod._gen.get(i) or 0) - master_mod._shed[i] == nx.get_node_attributes(graph, 'bus_pd')[i] for i in graph.nodes)
+                           (master_mod._gen.get(i) or 0) + master_mod._shed[i] == nx.get_node_attributes(graph, 'bus_pd')[i] for i in graph.nodes)
         
         #coef = random.uniform(.8,1)
         #temporary until stored values

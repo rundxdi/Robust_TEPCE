@@ -336,7 +336,39 @@ def create_subproblem(mast_mod, graph,k):
         return mod_lin
 
 
-##############################################
+def cycle_basis_VI(model, where):
+    if where == gp.GRB.Callback.MIPSOL:
+        if len(cycle_paths) <= 0:
+            pass
+        path = random.choice(cycle_paths)
+        cycle_paths.remove(path)
+        path1 = list(nx.utils.pairwise(path[0]))
+        path2 = list(nx.utils.pairwise(path[1]))
+        mp_length = graph.edge_subgraph(path1).size(weight='branch_CR')
+        start = path[0][0]
+        end = path[-1][1]
+
+        sp_e = path2
+        sp_length = graph.edge_subgraph(sp_e).size(weight='branch_CR')
+
+        if sp_length > mp_length:
+            sp_e, path1 = path1, sp_e
+            sp_length, mp_length = mp_length, sp_length
+
+        for i in range(len(path1)):
+            if path1[i][0] > path1[i][1]:
+                path1[i] = tuple(reversed(path1[i]))
+        for i in range(len(sp_e)):
+            if sp_e[i][0] > sp_e[i][1]:
+                sp_e[i] = tuple(reversed(sp_e[i]))
+
+        edge_status = nx.get_edge_attributes(graph, 'branch_status')
+        model.cbLazy(model._bus_angle[start] - model._bus_angle[end] <= sp_length +
+                     (mp_length - sp_length) * (len(sp_e) - gp.quicksum([model._expansion[edge] for edge in sp_e if edge_status[edge] == 0])))
+        model.cbLazy(model._bus_angle[end] - model._bus_angle[start] <= sp_length +
+                     (mp_length - sp_length) * (len(sp_e) - gp.quicksum([model._expansion[edge] for edge in sp_e if edge_status[edge] == 0])))
+
+    ##############################################
 ############ INPUT SETTINGS ##################
 ##############################################
 
@@ -377,15 +409,16 @@ elif '793' in filenames[0]:
 
 random.seed(pySEED)
 #cap = .9
-demand = .5
+#demand = .5
 
-#filenames = ["pglib-opf-master/az_2020_case892.m"]
-filenames = ["pglib-opf-master/pglib_opf_case793_goc_tep.m"]
+filenames = ["pglib-opf-master/az_2020_case892.m"]
+#filenames = ["pglib-opf-master/pglib_opf_case793_goc_tep.m"]
 
 #LP_Length = 3015
-cap = .8
+cap = 1
+demand = 1
 gen = 1
-gen_cost = .1
+gen_cost = 1
 
 
 
@@ -398,9 +431,18 @@ for filename in filenames:
     
     graph = nx.Graph()
     mp.encode_graph(graph, bus_data, gen_data, branch_data,demand,cap,gen,gen_cost)
-    
-    
-    graph_lr = graph.copy()
+
+    cycle_paths = []
+    cycleBasis = nx.cycle_basis(graph)
+    for cycle in cycleBasis:
+        for node in cycle[1:-1]:
+            path1 = cycle[:cycle.index(node) + 1]
+            path2 = cycle[cycle.index(node) + 1:]
+            path2.append(cycle[0])
+            cycle_paths.append((path1, path2))
+
+
+
     
     
     ###############################################
@@ -412,7 +454,9 @@ for filename in filenames:
     master_mod.Params.LogFile = 'master_mod_test_1.txt'
     master_mod.Params.MIPGap = .001
     #master_mod.Params.OutputFlag = 0
-    
+    master_mod.Params.lazyConstraints = 1
+    #master_mod.Params.MIPFocus = 1
+    #master_mod.Params.PreCrush = 1
     
     #Gather line status and cost properties for full graph
     M = 2*.6*max({key: 1/value for  (key,value) in nx.get_edge_attributes(graph,'branch_b').items()}.values())
@@ -424,8 +468,8 @@ for filename in filenames:
     recond_cost = nx.get_edge_attributes(graph,'branch_exp_cost')
     
     for cost in expand_cost:
-        expand_cost[cost] *= 10
-        recond_cost[cost] *= 10
+        expand_cost[cost] *= 1
+        recond_cost[cost] *= 1
 
     
     #Add binary decision variables    
@@ -437,7 +481,7 @@ for filename in filenames:
     master_mod._gamma = master_mod.addVar(name = 'gamma', obj = 1)
     
     #Budget constraint goes here
-    Pi = 200000
+    Pi = 2000000000
     master_mod._budget = master_mod.addConstr(gp.quicksum([expand_cost[i,j]*master_mod._expansion[i,j] for (i,j) in expand_lines]) + 
                                               gp.quicksum([recond_cost[i,j]*master_mod._reconductor[i,j] for (i,j) in recond_lines]) <= Pi)
     
@@ -562,10 +606,10 @@ for filename in filenames:
         
         #i.e. (7) - (17) from writeup?
         
-        master_mod.addConstrs((-1/edge_b[i,j] * (master_mod._bus_angle[i] - master_mod._bus_angle[j] ) - master_mod._corr_flow[i,j] + 
-                    (1 - master_mod._expansion[i,j])*M >= 0 for (i,j) in expand_lines))
-        master_mod.addConstrs((-1/edge_b[i,j] * (master_mod._bus_angle[i] - master_mod._bus_angle[j] ) - master_mod._corr_flow[i,j] - 
-                    (1 - master_mod._expansion[i,j])*M <= 0 for (i,j) in expand_lines))
+        master_mod.addConstrs((-1/edge_b[i,j] * master_mod._corr_flow[i,j] - (master_mod._bus_angle[i] - master_mod._bus_angle[j]) <=
+                    M*(1 - master_mod._expansion[i,j]) for (i,j) in expand_lines))
+        master_mod.addConstrs((-1/edge_b[i,j] * master_mod._corr_flow[i,j] - (master_mod._bus_angle[i] - master_mod._bus_angle[j]) >=
+                    -M*(1 - master_mod._expansion[i,j]) for (i,j) in expand_lines))
         master_mod.addConstrs((-1/edge_b[i,j] * (master_mod._bus_angle[i] - master_mod._bus_angle[j] ) ==  master_mod._corr_flow[i,j] for (i,j) in recond_lines))
         
         master_mod.addConstrs((master_mod._corr_flow[i,j] <= graph.edges[i,j][capstr] * master_mod._expansion[i,j] for (i,j) in expand_lines))
@@ -582,9 +626,14 @@ for filename in filenames:
         
         #Solve Master Problem
         master_mod.update()
-        master_mod.optimize()
+        master_mod.optimize(cycle_basis_VI)
 
         print(master_mod.status)
+        if master_mod.status == 3:
+            master_mod.computeIIS()
+            master_mod.write("master_IIS.ilp")
+            master_mod.write("master_mod.lp")
+            #sys.exit()
         print("Solution to Master Problem: " + str(master_mod.objVal))
         print()
         #for var in master_mod.getVars():
@@ -677,7 +726,7 @@ for filename in filenames:
         k+=1
         capstr = 'branch_cap' + str(k)
         for (i,j) in graph.edges:
-            graph.edges[i,j][capstr] = random.uniform(.58,1)*graph.edges[i,j]['branch_cap']
+            graph.edges[i,j][capstr] = random.uniform(.9,1)*graph.edges[i,j]['branch_cap']
         
         r_count = 0
         e_count = 0

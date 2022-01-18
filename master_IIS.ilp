@@ -3,58 +3,157 @@
 Minimize
  
 Subject To
- R652: - 0.259691383 corr_flow[15,340] + bus_angle[15] - bus_angle[340]
-   = 0
  R671: - 0.019214603 corr_flow[20,244] + bus_angle[20] - bus_angle[244]
    = 0
  R673: - 0.263115737 corr_flow[20,387] + bus_angle[20] - bus_angle[387]
    = 0
  R675: - 0.261873889 corr_flow[20,66] + bus_angle[20] - bus_angle[66] = 0
- R711: - 0.147032978 corr_flow[37,199] + bus_angle[37] - bus_angle[199]
+ R676: - 0.043519245 corr_flow[20,22] + bus_angle[20] - bus_angle[22] = 0
+ R679: - 0.132481166 corr_flow[22,506] + bus_angle[22] - bus_angle[506]
    = 0
- R712: - 0.043519245 corr_flow[37,71] + bus_angle[37] - bus_angle[71] = 0
+ R680: - 0.390238609 corr_flow[22,547] + bus_angle[22] - bus_angle[547]
+   = 0
+ R700: - 0.003771587 corr_flow[33,342] + bus_angle[33] - bus_angle[342]
+   = 0
+ R701: - 0.083147477 corr_flow[33,58] + bus_angle[33] - bus_angle[58] = 0
+ R702: - 0.861472294 corr_flow[33,544] + bus_angle[33] - bus_angle[544]
+   = 0
+ R723: - 0.075740885 corr_flow[43,855] + bus_angle[43] - bus_angle[855]
+   = 0
+ R724: - 0.252591195 corr_flow[43,472] + bus_angle[43] - bus_angle[472]
+   = 0
+ R726: - 0.056411769 corr_flow[43,502] + bus_angle[43] - bus_angle[502]
+   = 0
+ R753: - 0.106265353 corr_flow[57,147] + bus_angle[57] - bus_angle[147]
+   = 0
+ R757: - 1.377028778 corr_flow[57,350] + bus_angle[57] - bus_angle[350]
+   = 0
+ R767: - 0.457548161 corr_flow[61,387] + bus_angle[61] - bus_angle[387]
+   = 0
+ R769: - 0.121173448 corr_flow[61,144] + bus_angle[61] - bus_angle[144]
+   = 0
  R778: - 0.001429176 corr_flow[66,387] + bus_angle[66] - bus_angle[387]
    = 0
  R792: - 0.043519245 corr_flow[71,830] + bus_angle[71] - bus_angle[830]
    = 0
+ R796: - 0.043519245 corr_flow[71,738] + bus_angle[71] - bus_angle[738]
+   = 0
+ R800: - 0.043519245 corr_flow[71,595] + bus_angle[71] - bus_angle[595]
+   = 0
+ R801: - 0.043519245 corr_flow[71,547] + bus_angle[71] - bus_angle[547]
+   = 0
  R804: - 0.043519245 corr_flow[71,386] + bus_angle[71] - bus_angle[386]
    = 0
- R821: - 0.001480655 corr_flow[75,337] + bus_angle[75] - bus_angle[337]
+ R806: - 0.043519245 corr_flow[71,288] + bus_angle[71] - bus_angle[288]
+   = 0
+ R807: - 0.043519245 corr_flow[71,252] + bus_angle[71] - bus_angle[252]
    = 0
  R822: - 0.171247688 corr_flow[75,387] + bus_angle[75] - bus_angle[387]
    = 0
- R1059: - 0.670977438 corr_flow[199,336] + bus_angle[199] - bus_angle[336]
+ R823: - 0.170329124 corr_flow[75,540] + bus_angle[75] - bus_angle[540]
+   = 0
+ R906: - 0.465339827 corr_flow[118,796] + bus_angle[118] - bus_angle[796]
+   = 0
+ R907: - 0.397870588 corr_flow[118,687] + bus_angle[118] - bus_angle[687]
+   = 0
+ R928: - 0.009779174 corr_flow[128,681] + bus_angle[128] - bus_angle[681]
+   = 0
+ R929: - 0.043519245 corr_flow[128,144] + bus_angle[128] - bus_angle[144]
+   = 0
+ R933: - 0.049307152 corr_flow[131,146] + bus_angle[131] - bus_angle[146]
+   = 0
+ R935: - 0.211066257 corr_flow[131,502] + bus_angle[131] - bus_angle[502]
+   = 0
+ R938: - 0.130396811 corr_flow[134,350] + bus_angle[134] - bus_angle[350]
+   = 0
+ R939: - 0.149231769 corr_flow[134,641] + bus_angle[134] - bus_angle[641]
+   = 0
+ R957: - 0.6420299860000001 corr_flow[146,350] + bus_angle[146]
+   - bus_angle[350] = 0
+ R958: - 0.503586067 corr_flow[146,155] + bus_angle[146] - bus_angle[155]
+   = 0
+ R964: - 0.038300864 corr_flow[147,748] + bus_angle[147] - bus_angle[748]
+   = 0
+ R982: - 0.159417069 corr_flow[155,544] + bus_angle[155] - bus_angle[544]
+   = 0
+ R1096: - 0.058759697 corr_flow[214,540] + bus_angle[214] - bus_angle[540]
+   = 0
+ R1097: - 0.247201131 corr_flow[214,796] + bus_angle[214] - bus_angle[796]
+   = 0
+ R1143: - 0.056937266 corr_flow[237,475] + bus_angle[237] - bus_angle[475]
+   = 0
+ R1144: - 0.026467349 corr_flow[237,288] + bus_angle[237] - bus_angle[288]
    = 0
  R1157: - 0.002574477 corr_flow[244,386] + bus_angle[244] - bus_angle[386]
    = 0
- R1160: - 0.297750333 corr_flow[244,336] + bus_angle[244] - bus_angle[336]
+ R1177: - 0.182631502 corr_flow[252,687] + bus_angle[252] - bus_angle[687]
    = 0
- R1319: - 0.082040399 corr_flow[336,719] + bus_angle[336] - bus_angle[719]
+ R1178: - 0.019209283 corr_flow[252,264] + bus_angle[252] - bus_angle[264]
    = 0
- R1320: - 0.356647513 corr_flow[336,387] + bus_angle[336] - bus_angle[387]
-   = 0
- R1324: - 0.198620379 corr_flow[337,463] + bus_angle[337] - bus_angle[463]
-   = 0
- R1325: - 0.15818489 corr_flow[337,340] + bus_angle[337] - bus_angle[340]
+ R1196: - 0.370494372 corr_flow[264,585] + bus_angle[264] - bus_angle[585]
    = 0
  R1331: - 0.010401005 corr_flow[340,463] + bus_angle[340] - bus_angle[463]
+   = 0
+ R1332: - 0.049671988 corr_flow[340,387] + bus_angle[340] - bus_angle[387]
+   = 0
+ R1334: - 0.44545747 corr_flow[342,796] + bus_angle[342] - bus_angle[796]
+   = 0
+ R1338: - 0.082220187 corr_flow[344,738] + bus_angle[344] - bus_angle[738]
+   = 0
+ R1339: - 0.064781159 corr_flow[344,542] + bus_angle[344] - bus_angle[542]
+   = 0
+ R1349: - 0.19588464 corr_flow[350,547] + bus_angle[350] - bus_angle[547]
+   = 0
+ R1360: - 0.043519245 corr_flow[359,681] + bus_angle[359] - bus_angle[681]
+   = 0
+ R1362: - 0.043519245 corr_flow[359,360] + bus_angle[359] - bus_angle[360]
+   = 0
+ R1363: - 0.05579577 corr_flow[360,540] + bus_angle[360] - bus_angle[540]
+   = 0
+ R1387: - 0.019126694 corr_flow[376,651] + bus_angle[376] - bus_angle[651]
+   = 0
+ R1389: - 0.035229802 corr_flow[376,830] + bus_angle[376] - bus_angle[830]
+   = 0
+ R1403: - 0.001225145 corr_flow[386,595] + bus_angle[386] - bus_angle[595]
+   = 0
+ R1405: - 0.094094858 corr_flow[387,643] + bus_angle[387] - bus_angle[643]
    = 0
  R1406: - 0.0608395 corr_flow[387,830] + bus_angle[387] - bus_angle[830]
    = 0
  R1407: - 0.056596477 corr_flow[387,463] + bus_angle[387] - bus_angle[463]
    = 0
- R1663: - 0.208094614 corr_flow[719,817] + bus_angle[719] - bus_angle[817]
+ R1502: - 0.058461909 corr_flow[472,475] + bus_angle[472] - bus_angle[475]
    = 0
- R1737: - corr_flow[37,352] - corr_flow[37,199] - corr_flow[37,882]
-   - corr_flow[37,71] + gen[37] + load_shed[37] = 10
+ R1506: - 0.215812892 corr_flow[475,855] + bus_angle[475] - bus_angle[855]
+   = 0
+ R1530: - 0.146436538 corr_flow[506,667] + bus_angle[506] - bus_angle[667]
+   = 0
+ R1531: - 0.209022848 corr_flow[506,580] + bus_angle[506] - bus_angle[580]
+   = 0
+ R1558: - 0.04909797 corr_flow[542,748] + bus_angle[542] - bus_angle[748]
+   = 0
+ R1595: - 0.059171885 corr_flow[585,796] + bus_angle[585] - bus_angle[796]
+   = 0
+ R1616: - 0.040616275 corr_flow[621,643] + bus_angle[621] - bus_angle[643]
+   = 0
+ R1618: - 0.009588868 corr_flow[621,651] + bus_angle[621] - bus_angle[651]
+   = 0
+ R1629: - 0.319849409 corr_flow[641,667] + bus_angle[641] - bus_angle[667]
+   = 0
+ R1722: corr_flow[20,22] - corr_flow[22,506] - corr_flow[22,547] + gen[22]
+   + load_shed[22] = 1
+ R1733: - corr_flow[33,342] - corr_flow[33,58] - corr_flow[33,544]
+   + gen[33] + load_shed[33] = 6
  R1766: corr_flow[20,66] - corr_flow[66,387] + gen[66] + load_shed[66] = 2
  R1808: - corr_flow[108,463] + gen[108] + load_shed[108] = 10
- R2036: corr_flow[199,336] + corr_flow[244,336] - corr_flow[336,719]
-   - corr_flow[336,387] + gen[336] + load_shed[336] = 10
- R2040: corr_flow[15,340] + corr_flow[337,340] - corr_flow[340,463]
-   - corr_flow[340,387] + gen[340] + load_shed[340] = 7
- R2052: corr_flow[37,352] - corr_flow[352,757] + gen[352] + load_shed[352]
-   = 5
+ R1846: corr_flow[131,146] - corr_flow[146,350] - corr_flow[146,155]
+   + gen[146] + load_shed[146] = 2
+ R1952: corr_flow[71,252] - corr_flow[252,687] - corr_flow[252,264]
+   + gen[252] + load_shed[252] = 4
+ R2042: corr_flow[33,342] - corr_flow[342,796] + gen[342] + load_shed[342]
+   = 1
+ R2050: corr_flow[57,350] + corr_flow[134,350] + corr_flow[146,350]
+   - corr_flow[350,547] + gen[350] + load_shed[350] = 1817.65
  R2086: corr_flow[71,386] + corr_flow[244,386] - corr_flow[386,595]
    - corr_flow[386,875] + gen[386] + load_shed[386] = 326.3661675
  R2087: corr_flow[20,387] + corr_flow[61,387] + corr_flow[66,387]
@@ -62,91 +161,198 @@ Subject To
    + corr_flow[267,387] + corr_flow[336,387] + corr_flow[340,387]
    + corr_flow[380,387] - corr_flow[387,643] - corr_flow[387,830]
    - corr_flow[387,463] + gen[387] + load_shed[387] = 1485.990001
- R2149: - corr_flow[449,466] - corr_flow[449,757] + gen[449]
-   + load_shed[449] = 2
  R2163: corr_flow[108,463] + corr_flow[337,463] + corr_flow[340,463]
    + corr_flow[387,463] - corr_flow[463,730] + gen[463] + load_shed[463]
    = 150.408419
- R2166: corr_flow[449,466] + corr_flow[465,466] + gen[466] + load_shed[466]
-   = 6
+ R2175: corr_flow[237,475] + corr_flow[472,475] - corr_flow[475,855]
+   - corr_flow[475,691] + gen[475] + load_shed[475] = 10
+ R2206: corr_flow[22,506] - corr_flow[506,667] - corr_flow[506,580]
+   + gen[506] + load_shed[506] = 9
+ R2240: corr_flow[75,540] + corr_flow[214,540] + corr_flow[239,540]
+   + corr_flow[259,540] + corr_flow[360,540] - corr_flow[540,735]
+   - corr_flow[540,634] + gen[540] + load_shed[540] = 10
+ R2247: corr_flow[22,547] + corr_flow[71,547] + corr_flow[350,547]
+   + gen[547] + load_shed[547] = 4.25
  R2295: corr_flow[71,595] + corr_flow[377,595] + corr_flow[386,595]
    + gen[595] + load_shed[595] = 1409.633833
- R2404: - corr_flow[704,757] + gen[704] + load_shed[704] = 3
- R2419: corr_flow[336,719] - corr_flow[719,817] + gen[719] + load_shed[719]
-   = 2
- R2430: corr_flow[463,730] + gen[730] + load_shed[730] = 17.59158098
- R2457: corr_flow[352,757] + corr_flow[449,757] + corr_flow[704,757]
-   + gen[757] + load_shed[757] = 43.20190923
+ R2387: corr_flow[118,687] + corr_flow[252,687] + gen[687] + load_shed[687]
+   = 1
+ R2391: corr_flow[452,691] + corr_flow[475,691] + gen[691] + load_shed[691]
+   = 5
+ R2496: corr_flow[118,796] + corr_flow[214,796] + corr_flow[342,796]
+   + corr_flow[585,796] - corr_flow[796,821] + gen[796] + load_shed[796]
+   = 6
  R2530: corr_flow[71,830] + corr_flow[376,830] + corr_flow[387,830]
    + gen[830] + load_shed[830] = 9.45999883
- R2928: 77.52642101790542 expansion_status[37,882] + corr_flow[37,882]
+ R3012: 76.80555056358088 expansion_status[259,540] + corr_flow[259,540]
+   >= 0
+ R3104: 76.80555056358088 expansion_status[452,691] + corr_flow[452,691]
    >= 0
  R3263: - 198.5598040138028 reconductor_status[20,244] + corr_flow[20,244]
    <= 198.5598040138028
- R3359: - 208.8777677642689 reconductor_status[61,387] + corr_flow[61,387]
-   <= 208.8777677642689
- R3392: - 38.40277528179044 reconductor_status[71,595] + corr_flow[71,595]
+ R3268: - 19.20138764089522 reconductor_status[20,22] + corr_flow[20,22]
+   <= 19.20138764089522
+ R3272: - 2.869200106652045 reconductor_status[22,547] + corr_flow[22,547]
+   <= 2.869200106652045
+ R3315: - 29.07240788171453 reconductor_status[43,855] + corr_flow[43,855]
+   <= 29.07240788171453
+ R3316: - 29.07240788171453 reconductor_status[43,472] + corr_flow[43,472]
+   <= 29.07240788171453
+ R3345: - 11.01897813483192 reconductor_status[57,147] + corr_flow[57,147]
+   <= 11.01897813483192
+ R3361: - 30.29875312624559 reconductor_status[61,144] + corr_flow[61,144]
+   <= 30.29875312624559
+ R3399: - 38.40277528179044 reconductor_status[71,252] + corr_flow[71,252]
    <= 38.40277528179044
- R3413: - 48.77249702723932 reconductor_status[75,337] + corr_flow[75,337]
-   <= 48.77249702723932
- R3749: - 198.5598040138028 reconductor_status[244,386]
-   + corr_flow[244,386] <= 198.5598040138028
+ R3414: - 28.80208146134283 reconductor_status[75,387] + corr_flow[75,387]
+   <= 28.80208146134283
+ R3520: - 16.36481901212661 reconductor_status[128,681]
+   + corr_flow[128,681] <= 16.36481901212661
+ R3527: - 29.07240788171453 reconductor_status[131,502]
+   + corr_flow[131,502] <= 29.07240788171453
+ R3531: - 2.911215151649193 reconductor_status[134,641]
+   + corr_flow[134,641] <= 2.911215151649193
+ R3556: - 11.01897813483192 reconductor_status[147,748]
+   + corr_flow[147,748] <= 11.01897813483192
+ R3574: - 29.07240788171453 reconductor_status[155,544]
+   + corr_flow[155,544] <= 29.07240788171453
+ R3736: - 29.07240788171453 reconductor_status[237,288]
+   + corr_flow[237,288] <= 29.07240788171453
  R3762: - 28.80208146134283 reconductor_status[249,387]
    + corr_flow[249,387] <= 28.80208146134283
  R3773: - 4.362901045363289 reconductor_status[254,387]
    + corr_flow[254,387] <= 4.362901045363289
+ R3788: - 10.131293655749 reconductor_status[264,585] + corr_flow[264,585]
+   <= 10.131293655749
  R3800: - 28.80208146134283 reconductor_status[267,387]
    + corr_flow[267,387] <= 28.80208146134283
+ R3912: - 81.82409506063304 reconductor_status[336,387]
+   + corr_flow[336,387] <= 81.82409506063304
  R3916: - 28.80208146134283 reconductor_status[337,463]
    + corr_flow[337,463] <= 28.80208146134283
  R3923: - 28.80208146134283 reconductor_status[340,463]
    + corr_flow[340,463] <= 28.80208146134283
+ R3930: - 11.01897813483192 reconductor_status[344,738]
+   + corr_flow[344,738] <= 11.01897813483192
+ R3954: - 19.20138764089522 reconductor_status[359,360]
+   + corr_flow[359,360] <= 19.20138764089522
  R3982: - 28.80208146134283 reconductor_status[377,595]
    + corr_flow[377,595] <= 28.80208146134283
  R3985: - 28.80208146134283 reconductor_status[380,387]
    + corr_flow[380,387] <= 28.80208146134283
- R4089: - 19.20138764089522 reconductor_status[465,466]
-   + corr_flow[465,466] <= 19.20138764089522
- R4373: 11.12239846989836 reconductor_status[37,199] + corr_flow[37,199]
-   >= -11.12239846989836
- R5051: 7.170470621344976 reconductor_status[376,830] + corr_flow[376,830]
-   >= -7.170470621344976
- R5066: 19.20138764089522 reconductor_status[386,875] + corr_flow[386,875]
+ R3995: - 55.26239332465217 reconductor_status[386,595]
+   + corr_flow[386,595] <= 55.26239332465217
+ R3996: - 19.20138764089522 reconductor_status[386,875]
+   + corr_flow[386,875] <= 19.20138764089522
+ R4146: - 16.36481901212661 reconductor_status[540,735]
+   + corr_flow[540,735] <= 16.36481901212661
+ R4147: - 16.36481901212661 reconductor_status[540,634]
+   + corr_flow[540,634] <= 16.36481901212661
+ R4187: - 10.03708899410432 reconductor_status[585,796]
+   + corr_flow[585,796] <= 10.03708899410432
+ R4210: - 16.36481901212661 reconductor_status[621,651]
+   + corr_flow[621,651] <= 16.36481901212661
+ R4221: - 2.869200106652045 reconductor_status[641,667]
+   + corr_flow[641,667] <= 2.869200106652045
+ R4280: - 28.80208146134283 reconductor_status[796,821]
+   + corr_flow[796,821] <= 28.80208146134283
+ R4388: 29.07240788171453 reconductor_status[43,502] + corr_flow[43,502]
+   >= -29.07240788171453
+ R4458: 38.40277528179044 reconductor_status[71,738] + corr_flow[71,738]
+   >= -38.40277528179044
+ R4468: 38.40277528179044 reconductor_status[71,288] + corr_flow[71,288]
+   >= -38.40277528179044
+ R4485: 28.80208146134283 reconductor_status[75,540] + corr_flow[75,540]
+   >= -28.80208146134283
+ R4591: 19.20138764089522 reconductor_status[128,144] + corr_flow[128,144]
    >= -19.20138764089522
+ R4759: 28.80208146134283 reconductor_status[214,796] + corr_flow[214,796]
+   >= -28.80208146134283
+ R4805: 29.07240788171453 reconductor_status[237,475] + corr_flow[237,475]
+   >= -29.07240788171453
+ R4808: 8.86314119409505 reconductor_status[239,540] + corr_flow[239,540]
+   >= -8.86314119409505
+ R5001: 11.01897813483192 reconductor_status[344,542] + corr_flow[344,542]
+   >= -11.01897813483192
+ R5022: 19.20138764089522 reconductor_status[359,681] + corr_flow[359,681]
+   >= -19.20138764089522
+ R5049: 10.72737381761049 reconductor_status[376,651] + corr_flow[376,651]
+   >= -10.72737381761049
  R5067: 28.80208146134283 reconductor_status[387,643] + corr_flow[387,643]
    >= -28.80208146134283
  R5068: 5.001088179523538 reconductor_status[387,830] + corr_flow[387,830]
    >= -5.001088179523538
+ R5153: 8.549671383976587 reconductor_status[463,730] + corr_flow[463,730]
+   >= -8.549671383976587
+ R5220: 11.01897813483192 reconductor_status[542,748] + corr_flow[542,748]
+   >= -11.01897813483192
+ R5278: 6.528256847097638 reconductor_status[621,643] + corr_flow[621,643]
+   >= -6.528256847097638
 Bounds
- corr_flow[15,340] free
  corr_flow[20,244] free
  corr_flow[20,387] free
  corr_flow[20,66] free
- corr_flow[37,352] free
- corr_flow[37,199] free
- corr_flow[37,882] free
- corr_flow[37,71] free
+ corr_flow[20,22] free
+ corr_flow[22,506] free
+ corr_flow[22,547] free
+ corr_flow[33,342] free
+ corr_flow[33,58] free
+ corr_flow[33,544] free
+ corr_flow[43,855] free
+ corr_flow[43,472] free
+ corr_flow[43,502] free
+ corr_flow[57,147] free
+ corr_flow[57,350] free
  corr_flow[61,387] free
+ corr_flow[61,144] free
  corr_flow[66,387] free
  corr_flow[71,830] free
+ corr_flow[71,738] free
  corr_flow[71,595] free
+ corr_flow[71,547] free
  corr_flow[71,386] free
- corr_flow[75,337] free
+ corr_flow[71,288] free
+ corr_flow[71,252] free
  corr_flow[75,387] free
+ corr_flow[75,540] free
  corr_flow[108,463] free
- corr_flow[199,336] free
+ corr_flow[118,796] free
+ corr_flow[118,687] free
+ corr_flow[128,681] free
+ corr_flow[128,144] free
+ corr_flow[131,146] free
+ corr_flow[131,502] free
+ corr_flow[134,350] free
+ corr_flow[134,641] free
+ corr_flow[146,350] free
+ corr_flow[146,155] free
+ corr_flow[147,748] free
+ corr_flow[155,544] free
+ corr_flow[214,540] free
+ corr_flow[214,796] free
+ corr_flow[237,475] free
+ corr_flow[237,288] free
+ corr_flow[239,540] free
  corr_flow[244,386] free
- corr_flow[244,336] free
  corr_flow[249,387] free
+ corr_flow[252,687] free
+ corr_flow[252,264] free
  corr_flow[254,387] free
+ corr_flow[259,540] free
+ corr_flow[264,585] free
  corr_flow[267,387] free
- corr_flow[336,719] free
  corr_flow[336,387] free
  corr_flow[337,463] free
- corr_flow[337,340] free
  corr_flow[340,463] free
  corr_flow[340,387] free
- corr_flow[352,757] free
+ corr_flow[342,796] free
+ corr_flow[344,738] free
+ corr_flow[344,542] free
+ corr_flow[350,547] free
+ corr_flow[359,681] free
+ corr_flow[359,360] free
+ corr_flow[360,540] free
+ corr_flow[376,651] free
  corr_flow[376,830] free
  corr_flow[377,595] free
  corr_flow[380,387] free
@@ -155,70 +361,123 @@ Bounds
  corr_flow[387,643] free
  corr_flow[387,830] free
  corr_flow[387,463] free
- corr_flow[449,466] free
- corr_flow[449,757] free
+ corr_flow[452,691] free
  corr_flow[463,730] free
- corr_flow[465,466] free
- corr_flow[704,757] free
- corr_flow[719,817] free
- -infinity <= gen[37] <= 5
- -infinity <= gen[66] <= 5
+ corr_flow[472,475] free
+ corr_flow[475,855] free
+ corr_flow[475,691] free
+ corr_flow[506,667] free
+ corr_flow[506,580] free
+ corr_flow[540,735] free
+ corr_flow[540,634] free
+ corr_flow[542,748] free
+ corr_flow[585,796] free
+ corr_flow[621,643] free
+ corr_flow[621,651] free
+ corr_flow[641,667] free
+ corr_flow[796,821] free
+ -infinity <= gen[66] <= 30
  -infinity <= gen[108] <= 40
- -infinity <= gen[336] <= 90
- -infinity <= gen[340] <= 5
- -infinity <= gen[352] <= 10
- -infinity <= gen[386] <= 5
- -infinity <= gen[387] <= 50
- -infinity <= gen[449] <= 10
- -infinity <= gen[463] <= 5
- -infinity <= gen[466] <= 5
+ -infinity <= gen[146] <= 50
+ -infinity <= gen[252] <= 50
+ -infinity <= gen[350] <= 1638.4
+ -infinity <= gen[387] <= 55
+ -infinity <= gen[463] <= 30
+ -infinity <= gen[547] <= 50
  -infinity <= gen[595] <= 1219
- -infinity <= gen[704] <= 5
- -infinity <= gen[719] <= 90
- -infinity <= gen[730] <= 5
- -infinity <= gen[757] <= 5
- -infinity <= bus_angle[15] <= 30
+ -infinity <= gen[687] <= 50
  bus_angle[20] free
- bus_angle[37] free
+ bus_angle[22] free
+ bus_angle[33] free
+ bus_angle[43] free
+ bus_angle[57] free
+ bus_angle[58] >= -30
+ bus_angle[61] free
  bus_angle[66] free
  bus_angle[71] free
  bus_angle[75] free
- bus_angle[199] free
+ bus_angle[118] free
+ bus_angle[128] free
+ bus_angle[131] free
+ bus_angle[134] free
+ bus_angle[144] free
+ bus_angle[146] free
+ bus_angle[147] free
+ bus_angle[155] free
+ bus_angle[214] free
+ bus_angle[237] free
  bus_angle[244] free
- bus_angle[336] free
- bus_angle[337] free
+ bus_angle[252] free
+ bus_angle[264] free
+ bus_angle[288] free
  bus_angle[340] free
+ bus_angle[342] free
+ bus_angle[344] free
+ -infinity <= bus_angle[350] <= 30
+ bus_angle[359] free
+ bus_angle[360] free
+ bus_angle[376] free
  bus_angle[386] free
- bus_angle[387] >= -30
+ bus_angle[387] free
  bus_angle[463] free
- bus_angle[719] free
- -infinity <= bus_angle[817] <= 30
+ bus_angle[472] free
+ bus_angle[475] free
+ bus_angle[502] free
+ bus_angle[506] free
+ bus_angle[540] free
+ bus_angle[542] free
+ bus_angle[544] free
+ bus_angle[547] free
+ bus_angle[580] >= -30
+ bus_angle[585] free
+ bus_angle[595] free
+ bus_angle[621] free
+ bus_angle[641] free
+ bus_angle[643] free
+ bus_angle[651] free
+ bus_angle[667] free
+ bus_angle[681] free
+ bus_angle[687] free
+ bus_angle[738] free
+ bus_angle[748] free
+ bus_angle[796] free
  bus_angle[830] free
- -infinity <= load_shed[37] <= 0
+ bus_angle[855] free
  -infinity <= load_shed[66] <= 0
  -infinity <= load_shed[108] <= 0
- -infinity <= load_shed[336] <= 0
- -infinity <= load_shed[340] <= 0
- -infinity <= load_shed[352] <= 0
- -infinity <= load_shed[386] <= 0
+ -infinity <= load_shed[146] <= 0
+ -infinity <= load_shed[252] <= 0
+ -infinity <= load_shed[350] <= 0
  -infinity <= load_shed[387] <= 0
- -infinity <= load_shed[449] <= 0
  -infinity <= load_shed[463] <= 0
- -infinity <= load_shed[466] <= 0
+ -infinity <= load_shed[547] <= 0
  -infinity <= load_shed[595] <= 0
- -infinity <= load_shed[704] <= 0
- -infinity <= load_shed[719] <= 0
- -infinity <= load_shed[730] <= 0
- -infinity <= load_shed[757] <= 0
+ -infinity <= load_shed[687] <= 0
 Binaries
- expansion_status[37,882] reconductor_status[20,244]
- reconductor_status[37,199] reconductor_status[61,387]
- reconductor_status[71,595] reconductor_status[75,337]
- reconductor_status[244,386] reconductor_status[249,387]
- reconductor_status[254,387] reconductor_status[267,387]
+ expansion_status[259,540] expansion_status[452,691]
+ reconductor_status[20,244] reconductor_status[20,22]
+ reconductor_status[22,547] reconductor_status[43,855]
+ reconductor_status[43,472] reconductor_status[43,502]
+ reconductor_status[57,147] reconductor_status[61,144]
+ reconductor_status[71,738] reconductor_status[71,288]
+ reconductor_status[71,252] reconductor_status[75,387]
+ reconductor_status[75,540] reconductor_status[128,681]
+ reconductor_status[128,144] reconductor_status[131,502]
+ reconductor_status[134,641] reconductor_status[147,748]
+ reconductor_status[155,544] reconductor_status[214,796]
+ reconductor_status[237,475] reconductor_status[237,288]
+ reconductor_status[239,540] reconductor_status[249,387]
+ reconductor_status[254,387] reconductor_status[264,585]
+ reconductor_status[267,387] reconductor_status[336,387]
  reconductor_status[337,463] reconductor_status[340,463]
- reconductor_status[376,830] reconductor_status[377,595]
- reconductor_status[380,387] reconductor_status[386,875]
- reconductor_status[387,643] reconductor_status[387,830]
- reconductor_status[465,466]
+ reconductor_status[344,738] reconductor_status[344,542]
+ reconductor_status[359,681] reconductor_status[359,360]
+ reconductor_status[376,651] reconductor_status[377,595]
+ reconductor_status[380,387] reconductor_status[386,595]
+ reconductor_status[386,875] reconductor_status[387,643]
+ reconductor_status[387,830] reconductor_status[463,730]
+ reconductor_status[540,735] reconductor_status[540,634]
+ reconductor_status[542,748] reconductor_status[585,796]
+ reconductor_status[621,643] reconductor_status[621,651]
+ reconductor_status[641,667] reconductor_status[796,821]
 End

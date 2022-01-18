@@ -434,10 +434,10 @@ filenames = ["pglib-opf-master/az_2022_case892.m"]
 
 #LP_Length = 3015
 cap = 1
-demand = 1
+demand = .1
 gen = 1
 #check scale here
-gen_cost = .0000001
+gen_cost = .0001
 
 for filename in filenames:
     
@@ -480,7 +480,14 @@ for filename in filenames:
     ###############################################
     ########### Declare Master Problem ############
     ###############################################
-    
+
+    for node in graph.nodes:
+        graph.nodes[node]['gen_cost'] = 100000000000
+        if graph.nodes[node]['gen_Pmax'] <= 2:
+            graph.nodes[node]['gen_Pmax'] = 30
+
+
+
     master_mod = gp.Model()
     master_mod.modelSense = gp.GRB.MINIMIZE
     master_mod.Params.LogFile = 'master_mod_test_2.txt'

@@ -316,7 +316,7 @@ def cycle_basis_VI(model, where):
 ##############################################
 
 
-def create_subproblem(mast_mod, graph,k):
+def create_subproblem(mast_mod, graph,k,shed_cost):
         
         if k > 1:
             capstr ='branch_cap' + str(k)
@@ -336,7 +336,7 @@ def create_subproblem(mast_mod, graph,k):
     
         ######## Generation Variables ########
         mod_lin._gen = mod_lin.addVars(graph.nodes, name = 'gen', obj=nx.get_node_attributes(graph, 'gen_cost'))
-        shed_cost = max(nx.get_node_attributes(graph,'gen_cost').values())
+        #shed_cost = max(nx.get_node_attributes(graph,'gen_cost').values())
         #shed_cost = 100000
         mod_lin._shed = mod_lin.addVars(graph.nodes, name = 'load_shed', lb= 0, obj = shed_cost)
         
@@ -429,7 +429,7 @@ random.seed(pySEED)
 #cap = .9
 #demand = .5
 
-filenames = ["pglib-opf-master/az_2021_case892.m"]
+filenames = ["pglib-opf-master/az_2022_case892.m"]
 #filenames = ["pglib-opf-master/pglib_opf_case500_GOC.m"]
 
 #LP_Length = 3015
@@ -492,9 +492,9 @@ for filename in filenames:
     #master_mod.Params.PreCrush = 1
     
     #Gather line status and cost properties for full graph
-    M = 2*.6*max({key: value for  (key,value) in nx.get_edge_attributes(graph,'branch_b').items()}.values())
-    #M = 2 * .6 * max({key: 1/value for (key, value) in nx.get_edge_attributes(graph, 'branch_b').items()}.values())
-    #M = 100000
+    #M = 2*.6*max({key: value for  (key,value) in nx.get_edge_attributes(graph,'branch_b').items()}.values())
+    M = 2 * .6 * max({key: 1/value for (key, value) in nx.get_edge_attributes(graph, 'branch_b').items()}.values())
+    M = 100000
     edge_status = nx.get_edge_attributes(graph,'branch_status')
     edge_b = nx.get_edge_attributes(graph, 'branch_b')
     expand_lines = [(i,j) for (i,j) in graph.edges if edge_status[i,j] ==0]
@@ -503,8 +503,8 @@ for filename in filenames:
     recond_cost = nx.get_edge_attributes(graph,'branch_cand_cost')
     
     for cost in expand_cost:
-        expand_cost[cost] *= 0.01
-        recond_cost[cost] *= 0.01
+        expand_cost[cost] = 1
+        recond_cost[cost] = 1
 
     
     #Add binary decision variables
@@ -519,7 +519,7 @@ for filename in filenames:
     
     #Budget constraint goes here
     #eq 3.57
-    Pi = 5000000000
+    Pi = 500000000
     master_mod._budget = master_mod.addConstr(gp.quicksum([expand_cost[i,j]*master_mod._expansion[i,j] for (i,j) in expand_lines]) +
                                               gp.quicksum([recond_cost[i,j]*master_mod._reconductor[i,j] for (i,j) in recond_lines]) <= Pi)
     
@@ -547,7 +547,7 @@ for filename in filenames:
     #shed_cost = 1000000000000000
     shed_cap = nx.get_node_attributes(graph, 'bus_pd')
     for node in graph.nodes:
-        shed_cap[node] *= 1
+        shed_cap[node] *= 0
     #eq 3.33
     master_mod._shed = master_mod.addVars(graph.nodes, name = "load_shed", lb = 0, ub = shed_cap)
     #master_mod.addConstr(gp.quicksum(master_mod._shed) <= 0.1*sum(nx.get_node_attributes(graph, 'bus_pd').values()))
@@ -621,8 +621,20 @@ for filename in filenames:
                        sub_mod._varphi_hat[i] + sub_mod._varphi_check[i]
                        == 0 for i in graph.nodes)
     #3.39
-    sub_mod.addConstrs(sub_mod._lambda[i] + sub_mod._upsilon[i] <= shed_cost for i in graph.nodes)
-    
+    #sub_mod.addConstrs(sub_mod._lambda[i] + sub_mod._upsilon[i] <= shed_cost for i in graph.nodes)
+
+    # eq 3.28
+    master_mod.addConstrs((master_mod._corr_flow[i, j] + edge_b[i, j] * (master_mod._bus_angle[i] - master_mod._bus_angle[j]) <=
+                           M * (1 - master_mod._expansion[i, j]) for (i, j) in expand_lines))
+    # eq 3.29
+    master_mod.addConstrs((master_mod._corr_flow[i, j] + edge_b[i, j] * (master_mod._bus_angle[i] - master_mod._bus_angle[j]) >=
+                           -M * (1 - master_mod._expansion[i, j]) for (i, j) in expand_lines))
+    # eq 3.27
+    master_mod.addConstrs((master_mod._bus_angle[i] - master_mod._bus_angle[j] == edge_b[i, j] * master_mod._corr_flow[i, j] for (i, j) in recond_lines))
+    # eq 3.22
+    master_mod.addConstrs(gp.quicksum([master_mod._corr_flow[j, i] for j in graph.neighbors(i) if j < i]) -
+                          gp.quicksum([master_mod._corr_flow[i, j] for j in graph.neighbors(i) if j > i]) +
+                          master_mod._gen[i] + master_mod._shed[i] == nx.get_node_attributes(graph, 'bus_pd')[i] for i in graph.nodes)
     
     ###############################################
     ############## End Sub Problem ################
@@ -662,14 +674,7 @@ for filename in filenames:
         #Add operating constraints to master problem
         
         #i.e. (3.22) - (3.33) from writeup?
-        #eq 3.28
-        master_mod.addConstrs((master_mod._corr_flow[i,j] + edge_b[i,j] * (master_mod._bus_angle[i] - master_mod._bus_angle[j]) <=
-                    M*(1 - master_mod._expansion[i,j]) for (i,j) in expand_lines))
-        #eq 3.29
-        master_mod.addConstrs(( master_mod._corr_flow[i,j] + edge_b[i,j] * (master_mod._bus_angle[i] - master_mod._bus_angle[j]) >=
-                    -M*(1 - master_mod._expansion[i,j]) for (i,j) in expand_lines))
-        #eq 3.27
-        master_mod.addConstrs((master_mod._bus_angle[i] - master_mod._bus_angle[j]  ==  edge_b[i,j]*master_mod._corr_flow[i,j] for (i,j) in recond_lines))
+
         #eq 3.25
         master_mod.addConstrs((master_mod._corr_flow[i,j] <= graph.edges[i,j][capstr] * master_mod._expansion[i,j] for (i,j) in expand_lines))
         #eq 3.26
@@ -678,10 +683,7 @@ for filename in filenames:
         master_mod.addConstrs((master_mod._corr_flow[i,j] <= graph.edges[i,j][capstr] + graph.edges[i,j][capstr] * master_mod._reconductor[i,j]  for (i,j) in recond_lines))
         #eq 3.24
         master_mod.addConstrs((master_mod._corr_flow[i,j] >= -graph.edges[i,j][capstr] - graph.edges[i,j][capstr] * master_mod._reconductor[i,j] for (i,j) in recond_lines))
-        #eq 3.22
-        master_mod.addConstrs(gp.quicksum([master_mod._corr_flow[j,i] for j in graph.neighbors(i) if j < i]) - 
-                           gp.quicksum([master_mod._corr_flow[i,j] for j in graph.neighbors(i) if j > i]) + 
-                           master_mod._gen[i] + master_mod._shed[i] == nx.get_node_attributes(graph, 'bus_pd')[i] for i in graph.nodes)
+
         
         #coef = random.uniform(.8,1)
         #temporary until stored values
@@ -720,12 +722,12 @@ for filename in filenames:
                              gp.quicksum([M*(1-master_mod._expansion[i,j].x)*sub_mod._xi_check[i,j] for (i,j) in expand_lines]) +
                              gp.quicksum([graph.nodes[i]['gen_Pmax']*sub_mod._varphi[i] for i in graph.nodes]) +
                              gp.quicksum([30*sub_mod._varphi_hat[i] for i in graph.nodes]) -
-                             gp.quicksum([30*sub_mod._varphi_check[i] for i in graph.nodes]) +
-                             gp.quicksum([shed_cap[i] * sub_mod._upsilon[i] for i in graph.nodes]))
+                             gp.quicksum([30*sub_mod._varphi_check[i] for i in graph.nodes]))
+                             #+ gp.quicksum([shed_cap[i] * sub_mod._upsilon[i] for i in graph.nodes]))
 
 
         sub_mod.optimize()
-        mod_lin = create_subproblem(master_mod, graph, day)
+        mod_lin = create_subproblem(master_mod, graph, day, shed_cost)
         mod_lin.optimize()
         sub_mod.write('sub_mod.lp')
         mod_lin.write('mod_lin.lp')
@@ -741,8 +743,8 @@ for filename in filenames:
         #sub_mod.write('dual.lp')
 
         #Add constraint to master problem
-        #master_mod.addConstr(master_mod._gamma >= sub_mod.objVal)
-        master_mod.addConstr(master_mod._gamma >= mod_lin.objVal)
+        master_mod.addConstr(master_mod._gamma >= sub_mod.objVal)
+        #master_mod.addConstr(master_mod._gamma >= mod_lin.objVal)
 
         #otherwise y and z will never update
         

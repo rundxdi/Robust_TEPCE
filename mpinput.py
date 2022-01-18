@@ -128,11 +128,11 @@ def encode_graph(graph, bus_data, gen_data, branch_data, demand_scale, capacity_
     for i in gen_data['bus_i']:
         if not graph.nodes[i].get('gen_Pmax'):
             graph.nodes[i]['gen_Pmax'] = gen_data['Pg'][j]*gen_modifier
-            graph.nodes[i]['gen_Pmin'] = gen_data['Pg'][j]
+            graph.nodes[i]['gen_Pmin'] = 0
             graph.nodes[i]['gen_cost'] = gen_data['Pc1'][j]*gen_cost_scale
         else:
             graph.nodes[i]['gen_Pmax'] += gen_data['Pg'][j]*gen_modifier
-            graph.nodes[i]['gen_Pmin'] += gen_data['Pg'][j]
+            graph.nodes[i]['gen_Pmin'] += 0
             graph.nodes[i]['gen_cost'] += gen_data['Pc1'][j]*gen_cost_scale
         #cost default to 1 since most of these datasets are missing this information
         j += 1

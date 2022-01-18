@@ -129,18 +129,18 @@ line_status = dict()
 
 for bus in graph.nodes:
     x = random.random()
-    if x >= .99:
+    if x >= .95:
         bus_status[bus] = (0,0)
-    elif x>=.98:
+    elif x>=.90:
         bus_status[bus] = (1,0)
-    elif x >=.97:
+    elif x >=.87:
         bus_status[bus] = (0,1)
     else:
         bus_status[bus] = (1,1)
 
 for edge in graph.edges:
     x = random.random()
-    if x>=.98:
+    if x>=.8:
         line_status[edge] = 0
     else:
         line_status[edge] = 1
@@ -152,6 +152,20 @@ for node in graph.nodes:
 
 for edge in graph.edges:
     scenarios[1][edge] = line_status[edge]
+
+for i in range(2,101):
+    scenarios[i] = dict()
+    temp_nodes = list(bus_status.values())
+    temp_edges = list(line_status.values())
+    random.shuffle(temp_nodes)
+    random.shuffle(temp_edges)
+    new_nodes = dict(zip(bus_status,temp_nodes))
+    new_edges = dict(zip(line_status,temp_edges))
+    for node in graph.nodes:
+        scenarios[i][node] = new_nodes[node]
+
+    for edge in graph.edges:
+        scenarios[i][edge] = new_edges[edge]
 
 #for i in range(1,2):
 #    scenarios[i] = dict()
@@ -256,7 +270,7 @@ if master_mod.status == 3:
     master_mod.computeIIS()
     master_mod.write("master_IIS.ilp")
 master_mod.write("master_mod.lp")
-
+master_mod.write("ots_200_scenario.sol")
 
 print("Solution to Master Problem: " + str(master_mod.objVal))
 print()

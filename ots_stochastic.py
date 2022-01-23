@@ -73,6 +73,12 @@ def cycle_basis_VI(model, where):
 ########### END VALID INEQUALITIES ###########
 ##############################################
 
+if len(sys.argv) > 1:
+    bus_fail = float(sys.argv[1])
+    line_fail = float(sys.argv[2])
+else:
+    bus_fail = .05
+    line_fail = .2
 
 #############################################
 ########### EXECUTION BEGINS ################
@@ -82,7 +88,7 @@ def cycle_basis_VI(model, where):
 #random.seed(pySEED)
 
 filename = "pglib-opf-master/az_2021_case892_ots.m"
-#filename = "pglib-opf-master/pglib_opf_case500_goc_tep.m"
+filename = "pglib-opf-master/pglib_opf_case2000_goc.m"
 
 cap = 1
 demand = 1
@@ -129,18 +135,18 @@ line_status = dict()
 
 for bus in graph.nodes:
     x = random.random()
-    if x >= .95:
+    if x >= 1 - bus_fail:
         bus_status[bus] = (0,0)
-    elif x>=.90:
+    elif x>= 1 - 2*bus_fail:
         bus_status[bus] = (1,0)
-    elif x >=.87:
+    elif x >=1 - 3*bus_fail:
         bus_status[bus] = (0,1)
     else:
         bus_status[bus] = (1,1)
 
 for edge in graph.edges:
     x = random.random()
-    if x>=.8:
+    if x>= 1 - line_fail:
         line_status[edge] = 0
     else:
         line_status[edge] = 1
@@ -251,7 +257,7 @@ master_mod.addConstrs(master_mod._shed[i, s] >= nx.get_node_attributes(graph, 'b
 ###############################################
 
 
-master_mod.Params.MIPGap = .001
+master_mod.Params.MIPGap = .002
 time_of_change = 600
 new_gap = .01
 master_mod._changeParam = False
@@ -275,3 +281,44 @@ master_mod.write("ots_200_scenario.sol")
 print("Solution to Master Problem: " + str(master_mod.objVal))
 print()
 
+b_count = 0
+g_count = 0
+l_count = 0
+r_cost = 0
+e_cost = 0
+for var in master_mod.getVars():
+    if 'bus_invest' in var.VarName:
+        if abs(var.x) >= .0001:
+            b_count += 1
+    elif 'gen_invest' in var.VarName:
+        if abs(var.x) >= .0001:
+            g_count += 1
+    elif 'line_invest' in var.VarName:
+        if abs(var.x) >= .0001:
+            l_count += 1
+            #print(var.VarName, var.x)
+investments.append((b_count,g_count,l_count,master_mod.objVal))
+
+
+
+output_file = 'output_results_bus'+ str(bus_fail)[1:] + '_line' + str(line_fail)[1:] + '.txt'
+
+
+with open(output_file,'w') as out:
+    shed = 0
+    for var in master_mod.getVars():
+        if var.Varname[0:4] == 'load':
+            shed += var.x
+
+    out.write('shed (MW)' + '\t' + str(shed) + '\n')
+    out.write('shed cost' + '\t' + str(shed_cost) + '\n')
+
+    for iter in investments:
+        out.write('investment' + '\t' + str(iter) + '\n')
+
+    for var in master_mod.getVars():
+        if var.VarName[0] == 'r' or var.VarName[0] == 'e':
+            out.write(var.varName + '\t' + str(var.x) + '\n')
+
+print("total load shed (MW): ", shed)
+print("investments (bus,gen,line): ", investments)

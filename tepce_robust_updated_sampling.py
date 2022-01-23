@@ -271,13 +271,6 @@ def fused_graph_neg(graph, model_list, lin_mod, hyb_mod, trans_mod):
 ##########################################
 
 def cycle_basis_VI(model, where):
-    if where == gp.GRB.Callback.MIP:
-        run_time = model.cbGet(gp.GRB.Callback.RUNTIME)
-        mip_gap = model.params.MIPGap
-        if run_time > time_of_change and mip_gap != new_gap:
-            model._changeParam = True
-            model.terminate()
-
     if where == gp.GRB.Callback.MIPSOL:
         if len(cycle_paths) <= 0:
             pass
@@ -318,7 +311,7 @@ def cycle_basis_VI(model, where):
 
 def create_subproblem(mast_mod, graph,k,shed_cost):
         
-        if k > 1:
+        if k >= 1:
             capstr ='branch_cap' + str(k)
         else:
             capstr = 'branch_cap'
@@ -391,50 +384,18 @@ def create_subproblem(mast_mod, graph,k,shed_cost):
 ##############################################
 
 
-if len(sys.argv) > 1:
-    model_flag = int(sys.argv[1])
-    filenames = [sys.argv[2]]
-    output_filename = sys.argv[3]
-    SEED = int(sys.argv[4])
-    pySEED = int(sys.argv[5])
-else:
-    model_flag = 0
-    filename = "pglib-opf-master/pglib_opf_case793_goc_tep.m"
-    filenames = [filename]
-    output_filename = ""
-    SEED = 0
-    pySEED = 0
 
-#ieee 300
-if '300' in filenames[0]:
-    LP_Length = [1945.15]
-    cap = 1
-
-#goc 500
-elif '500' in filenames[0]:
-    LP_Length = [20692]
-    cap = 1.1
-
-#goc 793
-elif '793' in filenames[0]:
-    LP_Length = [1147.08]
-    cap = 1
 
 #############################################
 ########### EXECUTION BEGINS ################
 #############################################
-
-
-random.seed(pySEED)
-#cap = .9
-#demand = .5
 
 filenames = ["pglib-opf-master/az_2022_case892.m"]
 #filenames = ["pglib-opf-master/pglib_opf_case500_GOC.m"]
 
 #LP_Length = 3015
 cap = 2
-demand = .1
+demand = 1
 gen = 1
 #check scale here
 gen_cost = .0001
@@ -458,35 +419,9 @@ for filename in filenames:
             path2.append(cycle[0])
             cycle_paths.append((path1, path2))
 
-    #sheetname = 'Clustering Results Jan_7_22.xlsx'
-    #temp_data = pd.read_excel(sheetname, header=1, usecols="A:F",nrows=3211)
-
-    # Sample days from temp_data at uniform -- will abstract process at some point
-    # k+=1
-
-    #total_days = temp_data.shape[0]
-    #sampled_length = total_days // 50
-    #sampled_days = np.floor(total_days * np.random.random_sample(sampled_length))
-    #ampacity_scale = []
-    #zone_scale =dict()
-    #zone_scale[0] = 34/42
-    #zone_scale[1] = 28/42
-    #zone_scale[2] = 18/42
-    #zone_scale[3] = 1
-    #zone_scale[4] = 38/42
-    #zone_scale[5] = 31/42
-    #zone_scale[6] = 24/42
-
     ###############################################
     ########### Declare Master Problem ############
     ###############################################
-
-    #for node in graph.nodes:
-     #   graph.nodes[node]['gen_cost'] = 100000000000
-      #  if graph.nodes[node]['gen_Pmax'] <= 2:
-       #     graph.nodes[node]['gen_Pmax'] = 30
-
-
 
     master_mod = gp.Model()
     master_mod.modelSense = gp.GRB.MINIMIZE
@@ -510,9 +445,8 @@ for filename in filenames:
     recond_cost = nx.get_edge_attributes(graph,'branch_cand_cost')
     
     for cost in expand_cost:
-        expand_cost[cost] *= 1
-        recond_cost[cost] *= .1
-
+        expand_cost[cost] *= .1
+        recond_cost[cost] *= 1
     
     #Add binary decision variables
     #eq 3.56
@@ -526,9 +460,9 @@ for filename in filenames:
     
     #Budget constraint goes here
     #eq 3.57
-    Pi = 5000000000
-    #master_mod._budget = master_mod.addConstr(gp.quicksum([expand_cost[i,j]*master_mod._expansion[i,j] for (i,j) in expand_lines]) +
-     #                                         gp.quicksum([recond_cost[i,j]*master_mod._reconductor[i,j] for (i,j) in recond_lines]) <= Pi)
+    Pi = 50000000
+    master_mod._budget = master_mod.addConstr(gp.quicksum([expand_cost[i,j]*master_mod._expansion[i,j] for (i,j) in expand_lines]) +
+                                              gp.quicksum([recond_cost[i,j]*master_mod._reconductor[i,j] for (i,j) in recond_lines]) <= Pi)
     
     
     #Add standard variables
@@ -655,29 +589,31 @@ for filename in filenames:
     ###############################################
 
     investments = []
-    sampled_days = [i for i in range(1,129)]
-    #sampled_days = [i for i in range(1,9)]
-    zone_temp = dict()
-    zone_temp[0] = (27,34)
-    zone_temp[1] = (21,28)
-    zone_temp[2] = (11,18)
-    zone_temp[3] = (34,42)
-    zone_temp[4] = (30,38)
-    zone_temp[5] = (24,31)
-    zone_temp[6] = (17,24)
-    import itertools
-    scenarios = list(itertools.product('hl',repeat=7))
-    #while (obj_ub - obj_lb)/(obj_ub) > epsilon and k < 10:
+    #sampled_days = [i for i in range(1,129)]
+    sheetname = 'Clustering Results Jan_7_22.xlsx'
+    temp_data = pd.read_excel(sheetname, header=1, usecols="A:F",nrows=3211)
+
+    #Sample days from temp_data at uniform -- will abstract process at some point
+    #k+=1
+
+    total_days = temp_data.shape[0]
+    sampled_length = total_days // 50
+    sampled_days = np.floor(total_days * np.random.random_sample(sampled_length))
+    ampacity_scale = []
+    zone_scale =dict()
+    zone_scale[0] = 34/42
+    zone_scale[1] = 28/42
+    zone_scale[2] = 18/42
+    zone_scale[3] = 1
+    zone_scale[4] = 38/42
+    zone_scale[5] = 31/42
+    zone_scale[6] = 24/42
+
     for day in sampled_days:
         capstr = 'branch_cap' + str(day)
-        scen = sampled_days[day-1]
         for (i,j) in graph.edges:
             zone = max(graph.nodes[i]['bus_zone'],graph.nodes[i]['bus_zone'])
-            if scen == 'h':
-                temp = zone_temp[zone][1]
-            else:
-                temp = zone_temp[zone][0]
-            graph.edges[i,j][capstr] = ampacity(temp)*graph.edges[i,j]['branch_cap']
+            graph.edges[i,j][capstr] = zone_scale[zone]*ampacity(temp_data['Max'][int(day)])*graph.edges[i,j]['branch_cap']
 
         #Add operating constraints to master problem
         
@@ -697,26 +633,13 @@ for filename in filenames:
         #temporary until stored values
         master_mod.Params.MIPGap = .001
         #Solve Master Problem
-        master_mod.update()
-        time_of_change = 600
-        new_gap = .01
-        master_mod._changeParam = False
-
         master_mod.optimize(cycle_basis_VI)
-        while master_mod._changeParam and new_gap <= .07:
-            master_mod.params.MIPGap = new_gap
-            #time_of_change += 600
-            new_gap += .01
-
-            master_mod.optimize(cycle_basis_VI)
-
-
         print(master_mod.status)
+
         if master_mod.status == 3:
             master_mod.computeIIS()
             master_mod.write("master_IIS.ilp")
             master_mod.write("master_mod.lp")
-
 
         print("Solution to Master Problem: " + str(master_mod.objVal))
         print()
@@ -735,9 +658,9 @@ for filename in filenames:
 
 
         sub_mod.optimize()
-        #mod_lin = create_subproblem(master_mod, graph, day, shed_cost)
-        #mod_lin.optimize()
-        sub_mod.write('sub_mod.lp')
+        mod_lin = create_subproblem(master_mod, graph, day, shed_cost)
+        mod_lin.optimize()
+        #sub_mod.write('sub_mod.lp')
         #mod_lin.write('mod_lin.lp')
 
         print()
@@ -754,7 +677,7 @@ for filename in filenames:
 
             #Add constraint to master problem
             master_mod.addConstr(master_mod._gamma >= sub_mod.objVal)
-            #master_mod.addConstr(master_mod._gamma >= mod_lin.objVal)
+        #master_mod.addConstr(master_mod._gamma >= mod_lin.objVal)
 
         #otherwise y and z will never update
         

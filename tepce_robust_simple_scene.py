@@ -492,7 +492,7 @@ for filename in filenames:
     master_mod.modelSense = gp.GRB.MINIMIZE
     master_mod.Params.LogFile = 'master_mod_test_2.txt'
     #default .001
-    master_mod.Params.MIPGap = .01
+    master_mod.Params.MIPGap = .001
     #master_mod.Params.OutputFlag = 0
     master_mod.Params.lazyConstraints = 1
     #master_mod.Params.MIPFocus = 1
@@ -510,8 +510,8 @@ for filename in filenames:
     recond_cost = nx.get_edge_attributes(graph,'branch_cand_cost')
     
     for cost in expand_cost:
-        expand_cost[cost] *= 1
-        recond_cost[cost] *= .1
+        expand_cost[cost] *= .1
+        recond_cost[cost] *= 1
 
     
     #Add binary decision variables
@@ -526,9 +526,9 @@ for filename in filenames:
     
     #Budget constraint goes here
     #eq 3.57
-    Pi = 5000000000
-    #master_mod._budget = master_mod.addConstr(gp.quicksum([expand_cost[i,j]*master_mod._expansion[i,j] for (i,j) in expand_lines]) +
-     #                                         gp.quicksum([recond_cost[i,j]*master_mod._reconductor[i,j] for (i,j) in recond_lines]) <= Pi)
+    Pi = 50000000
+    master_mod._budget = master_mod.addConstr(gp.quicksum([expand_cost[i,j]*master_mod._expansion[i,j] for (i,j) in expand_lines]) +
+                                              gp.quicksum([recond_cost[i,j]*master_mod._reconductor[i,j] for (i,j) in recond_lines]) <= Pi)
     
     
     #Add standard variables

@@ -117,8 +117,6 @@ for cycle in cycleBasis:
 master_mod = gp.Model()
 master_mod.modelSense = gp.GRB.MINIMIZE
 master_mod.Params.LogFile = 'ots_log_1.txt'
-#default .001
-master_mod.Params.MIPGap = .01
 #master_mod.Params.OutputFlag = 0
 master_mod.Params.lazyConstraints = 1
 #master_mod.Params.MIPFocus = 1
@@ -185,10 +183,11 @@ node_scenarios = list(itertools.product(graph.nodes, scenarios))
 #Gather line status and cost properties for full graph
 M = 2*.6*max({key: 1/value for  (key,value) in nx.get_edge_attributes(graph,'branch_b').items()}.values())
 edge_b = nx.get_edge_attributes(graph, 'branch_b')
-Pi = 500
+Pi = 50000000
 hard_bus_cost = 1
 hard_gen_cost = 10
 hard_line_cost = 5
+investments=[]
 
 #Add binary decision variables
 
@@ -200,6 +199,8 @@ master_mod._line_invest = master_mod.addVars(graph.edges, vtype = gp.GRB.BINARY,
 
 
 #TODO: update budget constraint
+
+
 #Budget constraint goes here
 master_mod._budget = master_mod.addConstr(hard_bus_cost * gp.quicksum(master_mod._bus_invest) +
                                           hard_gen_cost * gp.quicksum(master_mod._gen_invest) +
@@ -224,10 +225,10 @@ master_mod._bus_angle = master_mod.addVars(node_scenarios, name = 'bus_angle', u
 
 ######## Load Shed Variables #######
 shed_cost = max(nx.get_node_attributes(graph,'gen_cost').values())
-shed_cost = 1
+#shed_cost = 10000000000
 shed_cap = nx.get_node_attributes(graph, 'bus_pd')
 for node in graph.nodes:
-    shed_cap[node] *= 1
+    shed_cap[node] *= .1
 master_mod._shed = master_mod.addVars(node_scenarios, name = "load_shed", lb = 0, ub = shed_cap,  obj=shed_cost)
 
 
@@ -246,7 +247,7 @@ master_mod.addConstrs(gp.quicksum([master_mod._corr_flow[(j, i), s] for j in gra
 master_mod.addConstrs(master_mod._switch[(i, j), s] <= scenarios[s][(i,j)] + master_mod._line_invest[i, j] for ((i, j), s) in line_scenarios)
 master_mod.addConstrs(master_mod._switch[(i, j), s] <= scenarios[s][i][0] + master_mod._bus_invest[i] for ((i, j), s) in line_scenarios if j in graph.neighbors(i))
 master_mod.addConstrs(master_mod._switch[(i, j), s] <= scenarios[s][j][0] + master_mod._bus_invest[j] for ((i, j), s) in line_scenarios if i in graph.neighbors(j))
-#master_mod.addConstrs(master_mod._gen[i, s] <= nx.get_node_attributes(graph,'gen_Pmax')[i] * (scenarios[s][i][1] + master_mod._gen_invest[i]) for (i,s) in node_scenarios)
+master_mod.addConstrs(master_mod._gen[i, s] <= nx.get_node_attributes(graph,'gen_Pmax')[i] * (scenarios[s][i][1] + master_mod._gen_invest[i]) for (i,s) in node_scenarios)
 master_mod.addConstrs(master_mod._shed[i, s] >= nx.get_node_attributes(graph, 'bus_pd')[i] * (1 - scenarios[s][i][0] - master_mod._bus_invest[i]) for (i, s) in node_scenarios)
 ###############################################
 ############# End Master Problem ##############
@@ -257,7 +258,7 @@ master_mod.addConstrs(master_mod._shed[i, s] >= nx.get_node_attributes(graph, 'b
 ###############################################
 
 
-master_mod.Params.MIPGap = .002
+master_mod.Params.MIPGap = .001
 time_of_change = 600
 new_gap = .01
 master_mod._changeParam = False
@@ -322,3 +323,9 @@ with open(output_file,'w') as out:
 
 print("total load shed (MW): ", shed)
 print("investments (bus,gen,line): ", investments)
+print()
+print()
+print('node, demand, shed')
+for node in graph.nodes:
+    names = 'load_shed[' +str(node) + ',1]'
+    print(node, graph.nodes[node]['bus_pd'], master_mod.getVarByName(names).x)

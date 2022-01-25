@@ -581,7 +581,11 @@ for filename in filenames:
     ###############################################
     ############## End Sub Problem ################
     ###############################################
-    
+
+    #sort_flag options -- cluster, month, location, year
+    #3020 records per location
+    #53 locations
+    sort_flag = 'cluster'
 
     
     ###############################################
@@ -591,14 +595,18 @@ for filename in filenames:
     investments = []
     #sampled_days = [i for i in range(1,129)]
     sheetname = 'Clustering Results Jan_7_22.xlsx'
-    temp_data = pd.read_excel(sheetname, header=1, usecols="A:F",nrows=3211)
+    temp_data = pd.read_excel(sheetname, header=1, usecols="A:F", engine='openpyxl')
+
+    grouped_data = temp_data.groupby(sort_flag)
 
     #Sample days from temp_data at uniform -- will abstract process at some point
     #k+=1
-
-    total_days = temp_data.shape[0]
-    sampled_length = total_days // 50
-    sampled_days = np.floor(total_days * np.random.random_sample(sampled_length))
+    total_days = dict()
+    sampled_days = dict()
+    for group in grouped_data.group:
+        total_days[group] = len(group)
+        sampled_length = 100
+        sampled_days[group] = np.floor(total_days[group] * np.random.random_sample(sampled_length))
     ampacity_scale = []
     zone_scale =dict()
     zone_scale[0] = 34/42
@@ -613,7 +621,7 @@ for filename in filenames:
         capstr = 'branch_cap' + str(day)
         for (i,j) in graph.edges:
             zone = max(graph.nodes[i]['bus_zone'],graph.nodes[i]['bus_zone'])
-            graph.edges[i,j][capstr] = zone_scale[zone]*ampacity(temp_data['Max'][int(day)])*graph.edges[i,j]['branch_cap']
+            graph.edges[i,j][capstr] = ampacity(temp_data['Max'][int(day)])*graph.edges[i,j]['branch_cap']
 
         #Add operating constraints to master problem
         
@@ -704,7 +712,7 @@ for filename in filenames:
 
 
 
-output_file = 'output_results'+ str(time.time())[:6]+ '.txt'
+output_file = 'output_results_clustered_sample'+ str(time.time())[:6]+ '.txt'
 
 
 with open(output_file,'w') as out:

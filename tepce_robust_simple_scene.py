@@ -434,7 +434,7 @@ filenames = ["pglib-opf-master/az_2022_case892.m"]
 
 #LP_Length = 3015
 cap = 2
-demand = .1
+demand = 1
 gen = 1
 #check scale here
 gen_cost = .0001
@@ -510,9 +510,8 @@ for filename in filenames:
     recond_cost = nx.get_edge_attributes(graph,'branch_cand_cost')
     
     for cost in expand_cost:
-        expand_cost[cost] *= .1
         recond_cost[cost] *= 1
-
+        expand_cost[cost] *= .1
     
     #Add binary decision variables
     #eq 3.56

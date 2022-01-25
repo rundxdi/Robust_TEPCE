@@ -217,7 +217,7 @@ master_mod._corr_flow = master_mod.addVars(line_scenarios, name='corr_flow', ub 
 master_mod._gen = master_mod.addVars(node_scenarios, name = 'gen', ub = nx.get_node_attributes(graph, 'gen_Pmax'))
                        #lb= nx.get_node_attributes(graph, 'gen_Pmin'), obj = nx.get_node_attributes(graph, 'gen_cost'))
 
-master_mod.addConstrs(master_mod._gen[i,s] <=nx.get_node_attributes(graph,'gen_Pmax')[i] * (scenarios[s][i][1] + master_mod._gen_invest[i])  for (i,s) in node_scenarios)
+#master_mod.addConstrs(master_mod._gen[i,s] <=nx.get_node_attributes(graph,'gen_Pmax')[i] * (scenarios[s][i][1] + master_mod._gen_invest[i])  for (i,s) in node_scenarios)
 
 ######## Angle Variables ########
 master_mod._bus_angle = master_mod.addVars(node_scenarios, name = 'bus_angle', ub = 30, lb = -30)
@@ -247,8 +247,8 @@ master_mod.addConstrs(gp.quicksum([master_mod._corr_flow[(j, i), s] for j in gra
 master_mod.addConstrs(master_mod._switch[(i, j), s] <= scenarios[s][(i,j)] + master_mod._line_invest[i, j] for ((i, j), s) in line_scenarios)
 master_mod.addConstrs(master_mod._switch[(i, j), s] <= scenarios[s][i][0] + master_mod._bus_invest[i] for ((i, j), s) in line_scenarios if j in graph.neighbors(i))
 master_mod.addConstrs(master_mod._switch[(i, j), s] <= scenarios[s][j][0] + master_mod._bus_invest[j] for ((i, j), s) in line_scenarios if i in graph.neighbors(j))
-master_mod.addConstrs(master_mod._gen[i, s] <= nx.get_node_attributes(graph,'gen_Pmax')[i] * (scenarios[s][i][1] + master_mod._gen_invest[i]) for (i,s) in node_scenarios)
-master_mod.addConstrs(master_mod._shed[i, s] >= nx.get_node_attributes(graph, 'bus_pd')[i] * (1 - scenarios[s][i][0] - master_mod._bus_invest[i]) for (i, s) in node_scenarios)
+#master_mod.addConstrs(master_mod._gen[i, s] <= nx.get_node_attributes(graph,'gen_Pmax')[i] * (scenarios[s][i][1] + master_mod._gen_invest[i]) for (i,s) in node_scenarios)
+#master_mod.addConstrs(master_mod._shed[i, s] >= nx.get_node_attributes(graph, 'bus_pd')[i] * (1 - scenarios[s][i][0] - master_mod._bus_invest[i]) for (i, s) in node_scenarios)
 ###############################################
 ############# End Master Problem ##############
 ###############################################

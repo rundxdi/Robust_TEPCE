@@ -78,7 +78,7 @@ if len(sys.argv) > 1:
     line_fail = float(sys.argv[2])
 else:
     bus_fail = .05
-    line_fail = .2
+    line_fail = .05
 
 #############################################
 ########### EXECUTION BEGINS ################
@@ -133,11 +133,12 @@ line_status = dict()
 
 for bus in graph.nodes:
     x = random.random()
-    if x >= 1 - bus_fail:
+    y = random.random()
+    if x >= 1 - bus_fail and y>= 1 - bus_fail:
         bus_status[bus] = (0,0)
-    elif x>= 1 - 2*bus_fail:
+    elif y >= 1 - bus_fail and x < 1 - bus_fail:
         bus_status[bus] = (1,0)
-    elif x >=1 - 3*bus_fail:
+    elif x >=1 - bus_fail and y < 1 - bus_fail:
         bus_status[bus] = (0,1)
     else:
         bus_status[bus] = (1,1)
@@ -183,7 +184,7 @@ node_scenarios = list(itertools.product(graph.nodes, scenarios))
 #Gather line status and cost properties for full graph
 M = 2*.6*max({key: 1/value for  (key,value) in nx.get_edge_attributes(graph,'branch_b').items()}.values())
 edge_b = nx.get_edge_attributes(graph, 'branch_b')
-Pi = 50000000
+Pi = 500
 hard_bus_cost = 1
 hard_gen_cost = 10
 hard_line_cost = 5
@@ -225,10 +226,10 @@ master_mod._bus_angle = master_mod.addVars(node_scenarios, name = 'bus_angle', u
 
 ######## Load Shed Variables #######
 shed_cost = max(nx.get_node_attributes(graph,'gen_cost').values())
-#shed_cost = 10000000000
+shed_cost = 1
 shed_cap = nx.get_node_attributes(graph, 'bus_pd')
 for node in graph.nodes:
-    shed_cap[node] *= .1
+    shed_cap[node] *= 1
 master_mod._shed = master_mod.addVars(node_scenarios, name = "load_shed", lb = 0, ub = shed_cap,  obj=shed_cost)
 
 
@@ -247,8 +248,8 @@ master_mod.addConstrs(gp.quicksum([master_mod._corr_flow[(j, i), s] for j in gra
 master_mod.addConstrs(master_mod._switch[(i, j), s] <= scenarios[s][(i,j)] + master_mod._line_invest[i, j] for ((i, j), s) in line_scenarios)
 master_mod.addConstrs(master_mod._switch[(i, j), s] <= scenarios[s][i][0] + master_mod._bus_invest[i] for ((i, j), s) in line_scenarios if j in graph.neighbors(i))
 master_mod.addConstrs(master_mod._switch[(i, j), s] <= scenarios[s][j][0] + master_mod._bus_invest[j] for ((i, j), s) in line_scenarios if i in graph.neighbors(j))
-#master_mod.addConstrs(master_mod._gen[i, s] <= nx.get_node_attributes(graph,'gen_Pmax')[i] * (scenarios[s][i][1] + master_mod._gen_invest[i]) for (i,s) in node_scenarios)
-#master_mod.addConstrs(master_mod._shed[i, s] >= nx.get_node_attributes(graph, 'bus_pd')[i] * (1 - scenarios[s][i][0] - master_mod._bus_invest[i]) for (i, s) in node_scenarios)
+master_mod.addConstrs(master_mod._gen[i, s] <= nx.get_node_attributes(graph,'gen_Pmax')[i] * (scenarios[s][i][1] + master_mod._gen_invest[i]) for (i,s) in node_scenarios)
+master_mod.addConstrs(master_mod._shed[i, s] >= nx.get_node_attributes(graph, 'bus_pd')[i] * (1 - scenarios[s][i][0] - master_mod._bus_invest[i]) for (i, s) in node_scenarios)
 ###############################################
 ############# End Master Problem ##############
 ###############################################

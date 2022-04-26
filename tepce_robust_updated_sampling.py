@@ -271,6 +271,12 @@ def fused_graph_neg(graph, model_list, lin_mod, hyb_mod, trans_mod):
 ##########################################
 
 def cycle_basis_VI(model, where):
+    if where == gp.GRB.Callback.MIP:
+        run_time = model.cbGet(gp.GRB.Callback.RUNTIME)
+        mip_gap = model.params.MIPGap
+        if run_time > time_of_change and mip_gap != new_gap:
+            model._changeParam = True
+            model.terminate()
     if where == gp.GRB.Callback.MIPSOL:
         if len(cycle_paths) <= 0:
             pass
@@ -585,7 +591,8 @@ for filename in filenames:
     #sort_flag options -- cluster, month, location, year
     #3020 records per location
     #53 locations
-    sort_flag = 'cluster'
+    query_flag = 'summer'
+    scale_flag = 1.2
 
     
     ###############################################
@@ -597,31 +604,27 @@ for filename in filenames:
     sheetname = 'Clustering Results Jan_7_22.xlsx'
     temp_data = pd.read_excel(sheetname, header=1, usecols="A:F", engine='openpyxl')
 
-    grouped_data = temp_data.groupby(sort_flag)
+    if query_flag == 'summer':
+        grouped_data = temp_data.query('MO == 7 or MO == 8')
 
     #Sample days from temp_data at uniform -- will abstract process at some point
     #k+=1
-    total_days = dict()
+    zone_dict = dict()
     sampled_days = dict()
-    for group in grouped_data.group:
-        total_days[group] = len(group)
-        sampled_length = 100
-        sampled_days[group] = np.floor(total_days[group] * np.random.random_sample(sampled_length))
-    ampacity_scale = []
-    zone_scale =dict()
-    zone_scale[0] = 34/42
-    zone_scale[1] = 28/42
-    zone_scale[2] = 18/42
-    zone_scale[3] = 1
-    zone_scale[4] = 38/42
-    zone_scale[5] = 31/42
-    zone_scale[6] = 24/42
+    sampled_length = 100
+    for i in range(0,7):
+        zone_dict[i] = grouped_data.query('cluster ==' +  str(i))
+        sampled_days[i] = zone_dict[i].sample(n=min(sampled_length,len(zone_dict[i])))
+    total_days = dict()
 
-    for day in sampled_days:
+
+
+    for day in range(0,sampled_length):
         capstr = 'branch_cap' + str(day)
         for (i,j) in graph.edges:
             zone = max(graph.nodes[i]['bus_zone'],graph.nodes[i]['bus_zone'])
-            graph.edges[i,j][capstr] = ampacity(temp_data['Max'][int(day)])*graph.edges[i,j]['branch_cap']
+            print(zone, len(zone_dict[zone]), day)
+            graph.edges[i,j][capstr] = ampacity(sampled_days[zone]['Max'].iloc[day % len(sampled_days[2]['Max'])])*graph.edges[i,j]['branch_cap']
 
         #Add operating constraints to master problem
         
@@ -641,7 +644,20 @@ for filename in filenames:
         #temporary until stored values
         master_mod.Params.MIPGap = .001
         #Solve Master Problem
+        master_mod.update()
+        time_of_change = 600
+        new_gap = .01
+        master_mod._changeParam = False
+        #Solve Master Problem
         master_mod.optimize(cycle_basis_VI)
+        while master_mod._changeParam and new_gap <= .07:
+            master_mod.params.MIPGap = new_gap
+            #time_of_change += 600
+            new_gap += .01
+
+            master_mod.optimize(cycle_basis_VI)
+
+
         print(master_mod.status)
 
         if master_mod.status == 3:
@@ -712,7 +728,7 @@ for filename in filenames:
 
 
 
-output_file = 'output_results_clustered_sample'+ str(time.time())[:6]+ '.txt'
+output_file = 'output_results_clustered_sample'+ query_flag + str(time.time())[:6]+ '.txt'
 
 
 with open(output_file,'w') as out:

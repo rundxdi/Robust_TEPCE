@@ -45,19 +45,31 @@ load_shed_matrix = np.empty((len(bus_keys), len(line_keys)))
 bus_investment_matrix = np.empty((len(bus_keys), len(line_keys)))
 generator_investment_matrix = np.empty((len(bus_keys), len(line_keys)))
 line_investment_matrix = np.empty((len(bus_keys), len(line_keys)))
+line_percent_matrix = np.empty((len(bus_keys), len(line_keys)))
+generator_investment_cost_matrix = np.empty((len(bus_keys), len(line_keys)))
+line_investment_cost_matrix = np.empty((len(bus_keys), len(line_keys)))
+bus_investment_cost_matrix = np.empty((len(bus_keys), len(line_keys)))
 load_shed_matrix[:] = np.nan
 bus_investment_matrix[:] = np.nan
 generator_investment_matrix[:] = np.nan
 line_investment_matrix[:] = np.nan
+line_percent_matrix[:] = np.nan
+generator_investment_cost_matrix[:] = np.nan
+line_investment_cost_matrix[:] = np.nan
+bus_investment_cost_matrix[:] = np.nan
 # fill matrix
 for ix, this_bus in enumerate(bus_keys):
     for iy, this_line in enumerate(line_keys):
         for this_dict in data_dicts:
             if (this_dict["bus fail percent"] == this_bus) and (this_dict["line fail percent"] == this_line):
-                load_shed_matrix[ix, iy] = this_dict["shed (MW)"]
+                load_shed_matrix[ix, iy] = this_dict["shed (MW)"] - 29623
                 bus_investment_matrix[ix, iy] = this_dict["investment"][0]
                 generator_investment_matrix[ix, iy] = this_dict["investment"][1]
                 line_investment_matrix[ix, iy] = this_dict["investment"][2]
+                line_percent_matrix[ix,iy] = (this_dict["investment"][2]*5)/500
+                generator_investment_cost_matrix[ix, iy] = this_dict["investment"][1]*10
+                line_investment_cost_matrix[ix, iy] = this_dict["investment"][2]*5
+                bus_investment_cost_matrix[ix, iy] = this_dict["investment"][0]
 
 # plotting params
 major_fontsize = 20
@@ -65,9 +77,9 @@ mid_fontsize = 16
 minor_fontsize = 12
 
 # print(load_shed_matrix)
-plot_types = ["Load Shed", "Bus Investment", "Generator Investment", "Line Investment"]
-units = ["MW", "Number of Investments", "Number of Investments", "Number of Investments"]
-data = [load_shed_matrix, bus_investment_matrix, generator_investment_matrix, line_investment_matrix]
+plot_types = ["Percent Load Shed", "Bus Investment", "Generator Investment", "Line Investment", "Line Investment Percentage", "Generator Investment Cost", "Line Investment Cost", "Bus Investment Cost"]
+units = ["MW", "Number of Investments", "Number of Investments", "Number of Investments", "Investment Percentage", "Cost of Investment (man-hours)", "Cost of Investment (man-hours)", "Cost of Investment (man-hours)"]
+data = [load_shed_matrix, bus_investment_matrix, generator_investment_matrix, line_investment_matrix, line_percent_matrix, generator_investment_cost_matrix, line_investment_cost_matrix, bus_investment_cost_matrix]
 
 # make all plots
 for this_plot_type, this_matrix, this_unit in zip(plot_types, data, units):
